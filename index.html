@@ -8,16 +8,20 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <style>
         /* --- Design System & CSS Variables --- */
         :root {
             --bg-gradient: radial-gradient(circle at 50% 50%, #0d0f1a 0%, #05060b 100%);
-            --primary-color: #6366f1; /* Indigo */
+            --primary-color: #6366f1;
+            /* Indigo */
             --primary-glow: rgba(99, 102, 241, 0.4);
-            --secondary-color: #a855f7; /* Purple */
-            
+            --secondary-color: #a855f7;
+            /* Purple */
+
             /* Active State (Checked) - Premium Emerald/Cyan Neon Gradient */
             --active-start: #00f2fe;
             --active-end: #4facfe;
@@ -28,7 +32,7 @@
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
-            
+
             /* Glassmorphism settings */
             --glass-bg: rgba(15, 23, 42, 0.45);
             --glass-border: rgba(255, 255, 255, 0.08);
@@ -45,7 +49,7 @@
             /* Font configurations */
             --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
             --font-title: 'Outfit', sans-serif;
-            
+
             /* Transition defaults */
             --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -53,14 +57,21 @@
         }
 
         /* --- Base Resets --- */
+        html {
+            min-height: 100%;
+            background: radial-gradient(circle at 50% 50%, #0d0f1a 0%, #05060b 100%) no-repeat center center fixed;
+            background-size: cover;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: var(--bg-gradient);
+            background: transparent;
             color: var(--text-primary);
             font-family: var(--font-sans);
             min-height: 100vh;
@@ -79,6 +90,7 @@
             pointer-events: none;
             opacity: 0.35;
         }
+
         .glow-1 {
             width: 450px;
             height: 450px;
@@ -87,6 +99,7 @@
             left: -100px;
             animation: pulseGlow 12s infinite alternate;
         }
+
         .glow-2 {
             width: 500px;
             height: 500px;
@@ -97,8 +110,15 @@
         }
 
         @keyframes pulseGlow {
-            0% { transform: scale(1) translate(0, 0); opacity: 0.25; }
-            100% { transform: scale(1.2) translate(50px, 30px); opacity: 0.4; }
+            0% {
+                transform: scale(1) translate(0, 0);
+                opacity: 0.25;
+            }
+
+            100% {
+                transform: scale(1.2) translate(50px, 30px);
+                opacity: 0.4;
+            }
         }
 
         /* --- Layout Container --- */
@@ -123,6 +143,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .glass::before {
             content: '';
             position: absolute;
@@ -138,6 +159,7 @@
         .app-header {
             margin-bottom: 0.5rem;
         }
+
         .header-content {
             display: flex;
             justify-content: space-between;
@@ -145,11 +167,13 @@
             gap: 1rem;
             flex-wrap: wrap;
         }
+
         .logo-area {
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
+
         .logo-icon {
             width: 44px;
             height: 44px;
@@ -162,6 +186,7 @@
             color: var(--primary-color);
             box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
         }
+
         .logo-area h1 {
             font-family: var(--font-title);
             font-size: 1.6rem;
@@ -171,6 +196,7 @@
             -webkit-text-fill-color: transparent;
             letter-spacing: -0.5px;
         }
+
         .subtitle {
             font-size: 0.85rem;
             color: var(--text-secondary);
@@ -192,29 +218,35 @@
             cursor: pointer;
             transition: var(--transition-fast);
         }
+
         .btn-primary {
             background: var(--primary-color);
             color: #fff;
             box-shadow: 0 4px 15px var(--primary-glow);
         }
+
         .btn-primary:hover {
             background: #4f46e5;
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
         }
+
         .btn-primary:active {
             transform: translateY(0);
         }
+
         .btn-secondary {
             background: rgba(255, 255, 255, 0.05);
             border-color: var(--glass-border);
             color: var(--text-primary);
         }
+
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.1);
             border-color: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
         }
+
         .full-width {
             width: 100%;
         }
@@ -228,9 +260,15 @@
         .spin {
             animation: rotate 1s linear infinite;
         }
+
         @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* --- Metrics Grid --- */
@@ -239,11 +277,13 @@
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 1.25rem;
         }
+
         @media (min-width: 900px) {
             .metrics-grid {
                 grid-template-columns: 1fr 1fr 2fr;
             }
         }
+
         .metric-card {
             padding: 1.25rem;
             display: flex;
@@ -251,11 +291,13 @@
             align-items: center;
             gap: 1rem;
         }
+
         .metric-info {
             display: flex;
             flex-direction: column;
             gap: 0.25rem;
         }
+
         .metric-label {
             font-size: 0.8rem;
             font-weight: 500;
@@ -263,26 +305,30 @@
             letter-spacing: 1px;
             color: var(--text-secondary);
         }
+
         .metric-value {
             font-family: var(--font-title);
             font-size: 2.2rem;
             font-weight: 700;
             line-height: 1.1;
-            background: linear-gradient(135deg, #8c50bd 0%, #1f163f 100%);
+            background: linear-gradient(135deg, #d4d0d8 0%, #790a4e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .metric-percent {
             font-family: var(--font-title);
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--primary-color);
         }
+
         .full-width-metric {
             flex-direction: column;
             align-items: stretch;
             justify-content: center;
         }
+
         .full-width-metric .metric-info {
             flex-direction: row;
             justify-content: space-between;
@@ -294,11 +340,13 @@
         .circle-progress svg {
             transform: rotate(-90deg);
         }
+
         .circle-bg {
             fill: none;
             stroke: rgba(255, 255, 255, 0.05);
             stroke-width: 3.5;
         }
+
         .circle-fill {
             fill: none;
             stroke: var(--primary-color);
@@ -306,6 +354,7 @@
             stroke-linecap: round;
             transition: stroke-dasharray var(--transition-normal);
         }
+
         #circle-progress-unchecked .circle-fill {
             stroke: var(--secondary-color);
         }
@@ -319,6 +368,7 @@
             position: relative;
             border: 1px solid rgba(255, 255, 255, 0.03);
         }
+
         .progress-bar-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -331,10 +381,12 @@
         .main-content {
             flex: 1;
         }
+
         .board-card {
             padding: 1.5rem;
             border-color: rgba(255, 255, 255, 0.06);
         }
+
         .board-header {
             display: flex;
             justify-content: space-between;
@@ -345,15 +397,18 @@
             flex-wrap: wrap;
             gap: 0.75rem;
         }
+
         .board-header h2 {
             font-family: var(--font-title);
             font-size: 1.25rem;
             font-weight: 600;
         }
+
         .board-legend {
             display: flex;
             gap: 1rem;
         }
+
         .legend-item {
             font-size: 0.8rem;
             color: var(--text-secondary);
@@ -361,15 +416,18 @@
             align-items: center;
             gap: 0.4rem;
         }
+
         .legend-dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
         }
+
         .legend-dot.unchecked {
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
+
         .legend-dot.checked {
             background: var(--active-start);
             box-shadow: 0 0 8px var(--active-glow);
@@ -388,11 +446,17 @@
                 grid-template-columns: repeat(5, minmax(0, 1fr));
                 gap: 0.5rem;
             }
+
             .app-container {
                 padding: 1.5rem 1rem;
             }
+
             .logo-area h1 {
                 font-size: 1.4rem;
+            }
+
+            .glow-sphere {
+                display: none;
             }
         }
 
@@ -412,6 +476,7 @@
             position: relative;
             transition: all var(--transition-normal);
         }
+
         .number-item span {
             font-family: var(--font-title);
             font-size: 1.6rem;
@@ -437,6 +502,7 @@
             box-shadow: 0 0 15px var(--active-glow), 0 0 5px rgba(255, 255, 255, 0.3) inset;
             animation: activePulse 2s infinite alternate;
         }
+
         .number-item.checked span {
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
@@ -457,6 +523,7 @@
             0% {
                 box-shadow: 0 0 10px var(--active-glow);
             }
+
             100% {
                 box-shadow: 0 0 20px var(--active-glow);
             }
@@ -466,10 +533,21 @@
         .number-item.just-marked {
             animation: markBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
         @keyframes markBounce {
-            0% { transform: scale(0.8); opacity: 0.5; }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1.03); opacity: 1; }
+            0% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+
+            100% {
+                transform: scale(1.03);
+                opacity: 1;
+            }
         }
 
         /* Countdown bar for auto refresh */
@@ -484,12 +562,15 @@
             color: var(--text-secondary);
             border-color: rgba(255, 255, 255, 0.04);
         }
+
         .countdown-text {
             font-weight: 500;
         }
+
         .countdown-text strong {
             color: var(--primary-color);
         }
+
         .timer-line-container {
             flex: 1;
             max-width: 250px;
@@ -499,6 +580,7 @@
             overflow: hidden;
             border: 1px solid rgba(255, 255, 255, 0.02);
         }
+
         .timer-line-fill {
             height: 100%;
             background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -515,16 +597,29 @@
             font-size: 0.8rem;
             color: var(--text-muted);
         }
+
         .app-footer .heart {
             color: var(--color-error);
             display: inline-block;
             animation: heartbeat 1.5s infinite;
         }
+
         @keyframes heartbeat {
-            0% { transform: scale(1); }
-            30% { transform: scale(1.1); }
-            60% { transform: scale(0.9); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            30% {
+                transform: scale(1.1);
+            }
+
+            60% {
+                transform: scale(0.9);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
     </style>
 </head>
@@ -671,7 +766,7 @@
             grid: document.getElementById('numbers-grid'),
             btnRefresh: document.getElementById('refresh-btn'),
             refreshIcon: document.getElementById('refresh-icon'),
-            
+
             // Metrics
             checkedCount: document.getElementById('checked-count'),
             uncheckedCount: document.getElementById('unchecked-count'),
@@ -679,7 +774,7 @@
             progressBarFill: document.getElementById('progress-bar-fill'),
             circleFillChecked: document.getElementById('circle-fill-checked'),
             circleFillUnchecked: document.getElementById('circle-fill-unchecked'),
-            
+
             // Countdown
             countdownTimer: document.getElementById('countdown-timer'),
             timerLineFill: document.getElementById('timer-line-fill')
@@ -689,7 +784,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             generateBoard();
             setupEventListeners();
-            
+
             // Initial fetch to load active numbers
             syncData();
         });
@@ -701,11 +796,11 @@
                 const item = document.createElement('div');
                 item.className = 'number-item';
                 item.id = `num-${i}`;
-                
+
                 const span = document.createElement('span');
                 span.textContent = i;
                 item.appendChild(span);
-                
+
                 elements.grid.appendChild(item);
             }
         }
@@ -722,18 +817,18 @@
             // Show spinner
             elements.refreshIcon.classList.add('spin');
             elements.btnRefresh.disabled = true;
-            
+
             // Backup current marked list to detect fresh checks
             state.previousMarkedNumbers = new Set(state.markedNumbers);
-            
+
             await fetchGoogleSheetsAPI();
-            
+
             // Reset spinner quickly
             setTimeout(() => {
                 elements.refreshIcon.classList.remove('spin');
                 elements.btnRefresh.disabled = false;
             }, 500);
-            
+
             // Reset auto-refresh timer countdown
             setupAutoRefresh();
         }
@@ -743,11 +838,11 @@
             try {
                 // Fetch data from Apps Script macro endpoint
                 const response = await fetch(API_URL);
-                
+
                 if (!response.ok) {
                     throw new Error(`Código HTTP: ${response.status}`);
                 }
-                
+
                 const data = await response.json();
                 parseJSONData(data);
             } catch (error) {
@@ -758,23 +853,23 @@
         // --- Parse JSON Data Payload ---
         function parseJSONData(data) {
             const newMarked = new Set();
-            
+
             if (Array.isArray(data)) {
                 data.forEach(item => {
                     const num = parseInt(item["Número"], 10);
                     // Check if Vendido? is true
                     const isSold = item["Vendido?"] === true;
-                    
+
                     if (!isNaN(num) && num >= 1 && num <= state.totalNumbers && isSold) {
                         newMarked.add(num);
                     }
                 });
-                
+
                 state.markedNumbers = newMarked;
             } else {
                 console.warn('Formato de resposta inválido recebido da API. Esperado Array.');
             }
-            
+
             updateUI();
         }
 
@@ -784,33 +879,33 @@
             const checked = state.markedNumbers.size;
             const unchecked = total - checked;
             const percent = Math.round((checked / total) * 100);
-            
+
             // 1. Text Metrics
             elements.checkedCount.textContent = checked;
             elements.uncheckedCount.textContent = unchecked;
             elements.progressPercent.textContent = `${percent}%`;
-            
+
             // 2. Linear Progress Bar
             elements.progressBarFill.style.width = `${percent}%`;
-            
+
             // 3. Circular SVGs Metrics
             elements.circleFillChecked.setAttribute('stroke-dasharray', `${percent}, 100`);
             elements.circleFillUnchecked.setAttribute('stroke-dasharray', `${100 - percent}, 100`);
-            
+
             // 4. Update Number Tiles styling
             for (let i = 1; i <= total; i++) {
                 const tile = document.getElementById(`num-${i}`);
                 if (!tile) continue;
-                
+
                 const isMarkedNow = state.markedNumbers.has(i);
                 const wasMarkedBefore = state.previousMarkedNumbers.has(i);
-                
+
                 // Remove old animation classes
                 tile.classList.remove('just-marked');
-                
+
                 if (isMarkedNow) {
                     tile.classList.add('checked');
-                    
+
                     // If it's a newly marked number, apply a bounce animation
                     if (!wasMarkedBefore && state.previousMarkedNumbers.size > 0) {
                         tile.classList.add('just-marked');
@@ -828,34 +923,34 @@
                 cancelAnimationFrame(state.timer.animationFrameId);
                 state.timer.animationFrameId = null;
             }
-            
+
             // Set up countdown values
             state.timer.remainingMs = REFRESH_INTERVAL;
             state.timer.lastTick = performance.now();
-            
+
             // Start countdown animation loop
             function animationLoop(timestamp) {
                 const delta = timestamp - state.timer.lastTick;
                 state.timer.lastTick = timestamp;
-                
+
                 state.timer.remainingMs -= delta;
-                
+
                 if (state.timer.remainingMs <= 0) {
                     state.timer.remainingMs = REFRESH_INTERVAL;
                     syncData(); // Trigger synchronisation
                     return;
                 }
-                
+
                 // Update countdown text & progress bar
                 const seconds = Math.max(0, Math.ceil(state.timer.remainingMs / 1000));
                 elements.countdownTimer.textContent = `${seconds}s`;
-                
+
                 const fillPercentage = Math.max(0, Math.min(100, (state.timer.remainingMs / REFRESH_INTERVAL) * 100));
                 elements.timerLineFill.style.width = `${fillPercentage}%`;
-                
+
                 state.timer.animationFrameId = requestAnimationFrame(animationLoop);
             }
-            
+
             state.timer.animationFrameId = requestAnimationFrame(animationLoop);
         }
     </script>
