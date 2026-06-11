@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Sorteio</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Design System & CSS Variables --- */
+        :root {
+            --bg-gradient: radial-gradient(circle at 50% 50%, #0d0f1a 0%, #05060b 100%);
+            --primary-color: #6366f1; /* Indigo */
+            --primary-glow: rgba(99, 102, 241, 0.4);
+            --secondary-color: #a855f7; /* Purple */
+            
+            /* Active State (Checked) - Premium Emerald/Cyan Neon Gradient */
+            --active-start: #00f2fe;
+            --active-end: #4facfe;
+            --active-glow: rgba(0, 242, 254, 0.5);
+            --active-text: #05060b;
+
+            /* Base Neutral Colors */
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            /* Glassmorphism settings */
+            --glass-bg: rgba(15, 23, 42, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-focus: rgba(99, 102, 241, 0.45);
+            --glass-highlight: rgba(255, 255, 255, 0.03);
+            --glass-blur: blur(20px);
+
+            /* Alerts and status colors */
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+            --color-info: #3b82f6;
+
+            /* Font configurations */
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-title: 'Outfit', sans-serif;
+            
+            /* Transition defaults */
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* --- Base Resets --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- Decorative Blur Spheres --- */
+        .glow-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(140px);
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.35;
+        }
+        .glow-1 {
+            width: 450px;
+            height: 450px;
+            background: var(--primary-color);
+            top: -50px;
+            left: -100px;
+            animation: pulseGlow 12s infinite alternate;
+        }
+        .glow-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--secondary-color);
+            bottom: -100px;
+            right: -100px;
+            animation: pulseGlow 15s infinite alternate-reverse;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.25; }
+            100% { transform: scale(1.2) translate(50px, 30px); opacity: 0.4; }
+        }
+
+        /* --- Layout Container --- */
+        .app-container {
+            width: 100%;
+            max-width: 1100px;
+            min-height: 100vh;
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Glassmorphism Panel Class */
+        .glass {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--glass-highlight) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        /* --- Header Styling --- */
+        .app-header {
+            margin-bottom: 0.5rem;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+        }
+        .logo-area h1 {
+            font-family: var(--font-title);
+            font-size: 1.6rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        /* --- Button Styling --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: var(--font-sans);
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.65rem 1.25rem;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+        .btn-primary {
+            background: var(--primary-color);
+            color: #fff;
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+        .btn-primary:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--glass-border);
+            color: var(--text-primary);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        .full-width {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        /* Spinning animation for refresh button icon */
+        .spin {
+            animation: rotate 1s linear infinite;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- Metrics Grid --- */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+        }
+        @media (min-width: 900px) {
+            .metrics-grid {
+                grid-template-columns: 1fr 1fr 2fr;
+            }
+        }
+        .metric-card {
+            padding: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        .metric-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        .metric-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+        }
+        .metric-value {
+            font-family: var(--font-title);
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.1;
+            background: linear-gradient(135deg, #fff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .metric-percent {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        .full-width-metric {
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: center;
+        }
+        .full-width-metric .metric-info {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Circular Progress Chart SVG */
+        .circle-progress svg {
+            transform: rotate(-90deg);
+        }
+        .circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.05);
+            stroke-width: 3.5;
+        }
+        .circle-fill {
+            fill: none;
+            stroke: var(--primary-color);
+            stroke-width: 3.5;
+            stroke-linecap: round;
+            transition: stroke-dasharray var(--transition-normal);
+        }
+        #circle-progress-unchecked .circle-fill {
+            stroke: var(--secondary-color);
+        }
+
+        /* Linear Progress Bar */
+        .progress-bar-container {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+            transition: width var(--transition-slow);
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex: 1;
+        }
+        .board-card {
+            padding: 1.5rem;
+            border-color: rgba(255, 255, 255, 0.06);
+        }
+        .board-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .board-header h2 {
+            font-family: var(--font-title);
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        .board-legend {
+            display: flex;
+            gap: 1rem;
+        }
+        .legend-item {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .legend-dot.unchecked {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .legend-dot.checked {
+            background: var(--active-start);
+            box-shadow: 0 0 8px var(--active-glow);
+        }
+
+        /* --- Numbers Grid Core --- */
+        .numbers-grid {
+            display: grid;
+            grid-template-columns: repeat(10, minmax(0, 1fr));
+            gap: 0.6rem;
+        }
+
+        /* Responsive Grid Adaptation */
+        @media (max-width: 768px) {
+            .numbers-grid {
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+                gap: 0.5rem;
+            }
+            .app-container {
+                padding: 1.5rem 1rem;
+            }
+            .logo-area h1 {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* Individual Number Item */
+        .number-item {
+            aspect-ratio: 1 / 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            cursor: default;
+            user-select: none;
+            position: relative;
+            transition: all var(--transition-normal);
+        }
+        .number-item span {
+            font-family: var(--font-title);
+            font-size: 1.6rem;
+            font-weight: 700;
+            line-height: 1;
+            transition: all var(--transition-normal);
+        }
+
+        /* Hover Effect for Unchecked */
+        .number-item:not(.checked):hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+            transform: scale(1.05);
+        }
+
+        /* Active Highlight (Checked State) - Premium Glowing */
+        .number-item.checked {
+            background: linear-gradient(135deg, var(--active-start) 0%, var(--active-end) 100%);
+            border-color: transparent;
+            color: var(--active-text);
+            transform: scale(1.03);
+            box-shadow: 0 0 15px var(--active-glow), 0 0 5px rgba(255, 255, 255, 0.3) inset;
+            animation: activePulse 2s infinite alternate;
+        }
+        .number-item.checked span {
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Dynamic check badge when item is active */
+        .number-item.checked::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--active-text);
+            opacity: 0.8;
+        }
+
+        @keyframes activePulse {
+            0% {
+                box-shadow: 0 0 10px var(--active-glow);
+            }
+            100% {
+                box-shadow: 0 0 20px var(--active-glow);
+            }
+        }
+
+        /* Fresh check highlight (pop animation on mark) */
+        .number-item.just-marked {
+            animation: markBounce 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes markBounce {
+            0% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1.03); opacity: 1; }
+        }
+
+        /* Countdown bar for auto refresh */
+        .countdown-wrapper {
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.25rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            border-color: rgba(255, 255, 255, 0.04);
+        }
+        .countdown-text {
+            font-weight: 500;
+        }
+        .countdown-text strong {
+            color: var(--primary-color);
+        }
+        .timer-line-container {
+            flex: 1;
+            max-width: 250px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 3px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+        }
+        .timer-line-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            width: 100%;
+            border-radius: 3px;
+            transition: width 0.1s linear;
+        }
+
+        /* --- Footer Styling --- */
+        .app-footer {
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: auto;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+        .app-footer .heart {
+            color: var(--color-error);
+            display: inline-block;
+            animation: heartbeat 1.5s infinite;
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.1); }
+            60% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Background decorative glows -->
+        <div class="glow-sphere glow-1"></div>
+        <div class="glow-sphere glow-2"></div>
+
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo-area">
+                    <div class="logo-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                            <line x1="9" y1="3" x2="9" y2="21"></line>
+                            <line x1="15" y1="3" x2="15" y2="21"></line>
+                            <line x1="3" y1="9" x2="21" y2="9"></line>
+                            <line x1="3" y1="15" x2="21" y2="15"></line>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1>Painel de Sorteio</h1>
+                        <p class="subtitle">Sincronizado Automaticamente</p>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <button id="refresh-btn" class="btn btn-primary">
+                        <svg id="refresh-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                        </svg>
+                        <span>Atualizar</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Auto-Refresh Countdown Bar -->
+        <div id="countdown-wrapper" class="countdown-wrapper glass">
+            <span class="countdown-text">Atualizando em: <strong id="countdown-timer">5s</strong></span>
+            <div class="timer-line-container">
+                <div class="timer-line-fill" id="timer-line-fill"></div>
+            </div>
+        </div>
+
+        <!-- Metrics Dashboard -->
+        <section class="metrics-grid">
+            <div class="metric-card glass">
+                <div class="metric-info">
+                    <span class="metric-label">Vendidos</span>
+                    <span class="metric-value" id="checked-count">0</span>
+                </div>
+                <div class="metric-visual">
+                    <div class="circle-progress" id="circle-progress-checked">
+                        <!-- SVG circle progress to be driven by JS -->
+                        <svg width="50" height="50" viewBox="0 0 36 36">
+                            <path class="circle-bg"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle-fill" id="circle-fill-checked" stroke-dasharray="0, 100"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric-card glass">
+                <div class="metric-info">
+                    <span class="metric-label">Disponíveis</span>
+                    <span class="metric-value" id="unchecked-count">70</span>
+                </div>
+                <div class="metric-visual">
+                    <div class="circle-progress" id="circle-progress-unchecked">
+                        <svg width="50" height="50" viewBox="0 0 36 36">
+                            <path class="circle-bg"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle-fill" id="circle-fill-unchecked" stroke-dasharray="100, 100"
+                                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metric-card glass full-width-metric">
+                <div class="metric-info">
+                    <span class="metric-label">Progresso Geral</span>
+                    <span class="metric-percent" id="progress-percent">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Numbers Grid Section -->
+        <main class="main-content">
+            <div class="board-card glass">
+                <div class="board-header">
+                    <h2>Quadro de Números</h2>
+                    <div class="board-legend">
+                        <span class="legend-item"><span class="legend-dot unchecked"></span> Disponível</span>
+                        <span class="legend-item"><span class="legend-dot checked"></span> Vendido</span>
+                    </div>
+                </div>
+                <!-- Numbers Grid -->
+                <div class="numbers-grid" id="numbers-grid">
+                    <!-- Numbers 1 to 70 will be generated here dynamically by JS -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>Desenvolvido com <span class="heart">♥</span> para sorteios eficientes. Sincronizado dinamicamente.</p>
+        </footer>
+    </div>
+
+    <!-- Logic Script -->
+    <script>
+        // --- Google Sheets API URL ---
+        const API_URL = 'https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnRaTOGaAZWFQmwrwdrYGSkoOdV31YSyhKT6uLw5038Oj7ocHyZb_xv3tRJQLwyTjD6OJ_znxP9Xw75zbfy4KFB5UEAiNpZM4mZ3Gy4pwGKm7rjkCUT53coSQ-bvU1iQmN6iJ9Q3XZtD02oTO7WgpwE215yUJSVo2arzo50OrfnINrExATnE_eHoHHfj-3r6JjxL3IFFjHdqNVcT3OCle6fqlxywkIYJfg-ZTGP4giqGN3lRqC32Zs3Gy0F2kJ0imqFDs99rysOYaQn5b4F8NH63dho49w&lib=MP0YPfBqHYvX9XNkJRaKnafMbYmtxQhFd';
+
+        // --- Refresh Configurations ---
+        const REFRESH_INTERVAL = 5000; // Auto-updates every 5 seconds
+
+        // --- Core Application State ---
+        const state = {
+            totalNumbers: 70,
+            markedNumbers: new Set(),
+            previousMarkedNumbers: new Set(),
+            timer: {
+                animationFrameId: null,
+                lastTick: 0,
+                remainingMs: 0
+            }
+        };
+
+        // --- DOM References ---
+        const elements = {
+            grid: document.getElementById('numbers-grid'),
+            btnRefresh: document.getElementById('refresh-btn'),
+            refreshIcon: document.getElementById('refresh-icon'),
+            
+            // Metrics
+            checkedCount: document.getElementById('checked-count'),
+            uncheckedCount: document.getElementById('unchecked-count'),
+            progressPercent: document.getElementById('progress-percent'),
+            progressBarFill: document.getElementById('progress-bar-fill'),
+            circleFillChecked: document.getElementById('circle-fill-checked'),
+            circleFillUnchecked: document.getElementById('circle-fill-unchecked'),
+            
+            // Countdown
+            countdownTimer: document.getElementById('countdown-timer'),
+            timerLineFill: document.getElementById('timer-line-fill')
+        };
+
+        // --- Initial Setup ---
+        document.addEventListener('DOMContentLoaded', () => {
+            generateBoard();
+            setupEventListeners();
+            
+            // Initial fetch to load active numbers
+            syncData();
+        });
+
+        // --- Generate HTML Board 1-70 ---
+        function generateBoard() {
+            elements.grid.innerHTML = '';
+            for (let i = 1; i <= state.totalNumbers; i++) {
+                const item = document.createElement('div');
+                item.className = 'number-item';
+                item.id = `num-${i}`;
+                
+                const span = document.createElement('span');
+                span.textContent = i;
+                item.appendChild(span);
+                
+                elements.grid.appendChild(item);
+            }
+        }
+
+        // --- Event Listeners Setup ---
+        function setupEventListeners() {
+            elements.btnRefresh.addEventListener('click', () => {
+                syncData();
+            });
+        }
+
+        // --- Synchronize Data with API ---
+        async function syncData() {
+            // Show spinner
+            elements.refreshIcon.classList.add('spin');
+            elements.btnRefresh.disabled = true;
+            
+            // Backup current marked list to detect fresh checks
+            state.previousMarkedNumbers = new Set(state.markedNumbers);
+            
+            await fetchGoogleSheetsAPI();
+            
+            // Reset spinner quickly
+            setTimeout(() => {
+                elements.refreshIcon.classList.remove('spin');
+                elements.btnRefresh.disabled = false;
+            }, 500);
+            
+            // Reset auto-refresh timer countdown
+            setupAutoRefresh();
+        }
+
+        // --- Fetch Google Sheets API JSON ---
+        async function fetchGoogleSheetsAPI() {
+            try {
+                // Fetch data from Apps Script macro endpoint
+                const response = await fetch(API_URL);
+                
+                if (!response.ok) {
+                    throw new Error(`Código HTTP: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                parseJSONData(data);
+            } catch (error) {
+                console.error('Falha de conexão com a API do Google Sheets:', error);
+            }
+        }
+
+        // --- Parse JSON Data Payload ---
+        function parseJSONData(data) {
+            const newMarked = new Set();
+            
+            if (Array.isArray(data)) {
+                data.forEach(item => {
+                    const num = parseInt(item["Número"], 10);
+                    // Check if Vendido? is true
+                    const isSold = item["Vendido?"] === true;
+                    
+                    if (!isNaN(num) && num >= 1 && num <= state.totalNumbers && isSold) {
+                        newMarked.add(num);
+                    }
+                });
+                
+                state.markedNumbers = newMarked;
+            } else {
+                console.warn('Formato de resposta inválido recebido da API. Esperado Array.');
+            }
+            
+            updateUI();
+        }
+
+        // --- Update HTML Elements and Board Classes ---
+        function updateUI() {
+            const total = state.totalNumbers;
+            const checked = state.markedNumbers.size;
+            const unchecked = total - checked;
+            const percent = Math.round((checked / total) * 100);
+            
+            // 1. Text Metrics
+            elements.checkedCount.textContent = checked;
+            elements.uncheckedCount.textContent = unchecked;
+            elements.progressPercent.textContent = `${percent}%`;
+            
+            // 2. Linear Progress Bar
+            elements.progressBarFill.style.width = `${percent}%`;
+            
+            // 3. Circular SVGs Metrics
+            elements.circleFillChecked.setAttribute('stroke-dasharray', `${percent}, 100`);
+            elements.circleFillUnchecked.setAttribute('stroke-dasharray', `${100 - percent}, 100`);
+            
+            // 4. Update Number Tiles styling
+            for (let i = 1; i <= total; i++) {
+                const tile = document.getElementById(`num-${i}`);
+                if (!tile) continue;
+                
+                const isMarkedNow = state.markedNumbers.has(i);
+                const wasMarkedBefore = state.previousMarkedNumbers.has(i);
+                
+                // Remove old animation classes
+                tile.classList.remove('just-marked');
+                
+                if (isMarkedNow) {
+                    tile.classList.add('checked');
+                    
+                    // If it's a newly marked number, apply a bounce animation
+                    if (!wasMarkedBefore && state.previousMarkedNumbers.size > 0) {
+                        tile.classList.add('just-marked');
+                    }
+                } else {
+                    tile.classList.remove('checked');
+                }
+            }
+        }
+
+        // --- Auto Refresh Controller ---
+        function setupAutoRefresh() {
+            // Cancel existing timers
+            if (state.timer.animationFrameId) {
+                cancelAnimationFrame(state.timer.animationFrameId);
+                state.timer.animationFrameId = null;
+            }
+            
+            // Set up countdown values
+            state.timer.remainingMs = REFRESH_INTERVAL;
+            state.timer.lastTick = performance.now();
+            
+            // Start countdown animation loop
+            function animationLoop(timestamp) {
+                const delta = timestamp - state.timer.lastTick;
+                state.timer.lastTick = timestamp;
+                
+                state.timer.remainingMs -= delta;
+                
+                if (state.timer.remainingMs <= 0) {
+                    state.timer.remainingMs = REFRESH_INTERVAL;
+                    syncData(); // Trigger synchronisation
+                    return;
+                }
+                
+                // Update countdown text & progress bar
+                const seconds = Math.max(0, Math.ceil(state.timer.remainingMs / 1000));
+                elements.countdownTimer.textContent = `${seconds}s`;
+                
+                const fillPercentage = Math.max(0, Math.min(100, (state.timer.remainingMs / REFRESH_INTERVAL) * 100));
+                elements.timerLineFill.style.width = `${fillPercentage}%`;
+                
+                state.timer.animationFrameId = requestAnimationFrame(animationLoop);
+            }
+            
+            state.timer.animationFrameId = requestAnimationFrame(animationLoop);
+        }
+    </script>
+</body>
+
+</html>
